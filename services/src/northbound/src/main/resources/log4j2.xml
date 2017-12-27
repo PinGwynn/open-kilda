@@ -4,9 +4,15 @@
         <Console name="STDOUT" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{ISO8601} | %-5.5p | %-32.32t | %-32.32c{1} | @project.name@ - @project.version@ | %m%n"/>
         </Console>
-        <Socket name="LOGSTASH" host="logstash" port="5005">
-            <JsonLayout compact="true" eventEol="true" />
-        </Socket>
+        <RollingFile name="J1" immediateFlush="false"
+                 fileName="/var/log/volume/northbound.log.json"
+                 filePattern="/var/log/volume/northbound.log.json.%i.gz">
+           <JSONLayout compact="true" eventEol="true"/>
+           <Policies>
+            <SizeBasedTriggeringPolicy size="100 MB"/> <!-- Or every 100 MB -->
+          </Policies>
+          <DefaultRolloverStrategy max="9"/>
+        </RollingFile>
         <RollingFile name="ROLLINGFILE" fileName="/var/logs/northbound/app.log"
                 filePattern="/var/logs/northbound/app-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout pattern="%d{ISO8601} | %-5.5p | %-32.32t | %-32.32c{1} | @project.name@ - @project.version@ | %m%n"/>
@@ -20,7 +26,7 @@
         <Logger name="org.openkilda.northbound" level="DEBUG" />
         <Root level="INFO">
             <AppenderRef ref="STDOUT"/>
-            <AppenderRef ref="LOGSTASH"/>
+            <AppenderRef ref="J1"/>
             <AppenderRef ref="ROLLINGFILE"/>
         </Root>
     </Loggers>

@@ -3,7 +3,7 @@
     "logstash": {
       "level": "DEBUG",
       "class": "logstash.TCPLogstashHandler",
-      "host": "logstash",
+      "host": "logstash.pendev",
       "version": 1,
       "message_type": "kilda-MN",
       "port": 5004
